@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BASEDIR=`eval basename $(dirname "$PWD")`
+BASEDIR=`eval basename $(dirname $PWD)`
 
 if [[ $BASEDIR == 'PG-342567987' ]] || [[ $BASEDIR == 'PG-XXXXXXXXX' ]]
 then
