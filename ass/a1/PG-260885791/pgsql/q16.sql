@@ -1,0 +1,6 @@
+-- This query is a simple attempt of a recommendation system.
+-- List the title and release date of movies, their average ratings for Comedy movies not reviewed by cinebuff@movieinfo.com (email)
+-- such that the average rating of each movie is the same or higher than the average rating given by cinebuff@movieinfo.com across all Comedy movies.
+-- Name the average rating column avgrating. Order the output such that the movies with a higher average rating is at the top.
+-- For movies with same average rating, order them by the release date and then by the title.
+-- You can assume that there will be some Comedy movies reviewed by this user in the database.
