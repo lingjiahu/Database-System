@@ -3,7 +3,7 @@
 -- ordered by the movie id.
 
 SELECT movid, title
-FROM movies
+FROM Movies
 WHERE EXTRACT(year from releasedate) >= 2021
 ORDER BY movid
 ;
