@@ -10,4 +10,3 @@ WHERE U.email = 'talkiesdude@movieinfo.com')
 ORDER BY R.rating DESC, M.releasedate, M.title
 ;
 
--- SELECT * FROM review where userid = 'tdude';

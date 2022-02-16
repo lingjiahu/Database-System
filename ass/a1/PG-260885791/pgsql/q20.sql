@@ -18,9 +18,7 @@ WITH langen(lan, gen, cnt) AS
         GROUP BY L.language, G.genre)
 SELECT LG.lan, LG.gen
 FROM langen LG
-GROUP BY LG.lan, LG.gen, LG.cnt
-HAVING LG.cnt = (SELECT MAX(lg2.cnt)
+WHERE LG.cnt = (SELECT MAX(lg2.cnt)
     FROM langen lg2 WHERE lg2.lan = LG.lan)
 ORDER BY LG.lan, LG.gen
 ;
-

@@ -10,5 +10,3 @@ SELECT M.title, M.releasedate
 FROM Movies M JOIN Moviegenres G ON M.movid = G.movid
 WHERE G.genre = 'Sci-Fi'
 ;
-
--- SELECT * FROM moviegenres WHERE genre = 'Comedy' OR genre = 'Sci-Fi';

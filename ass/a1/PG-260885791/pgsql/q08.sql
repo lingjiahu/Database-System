@@ -23,6 +23,3 @@ SELECT DISTINCT U.uname, U.email
 FROM users U JOIN id ON U.userid = id.uid
 ORDER BY U.email
 ;
-
--- TODO check this and all later ones with data
-

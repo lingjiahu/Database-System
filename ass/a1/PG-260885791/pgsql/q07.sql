@@ -50,6 +50,3 @@ FROM Movies M
          JOIN releaselanguages RL2 ON M.movid = RL2.movid AND RL2.language = 'Italian'
 ORDER BY releasedate, title
 ;
-
--- SELECT * FROM releaselanguages r JOIN movies m on r.movid = m.movid AND (r.language = 'French' OR r.language = 'Italian');
-

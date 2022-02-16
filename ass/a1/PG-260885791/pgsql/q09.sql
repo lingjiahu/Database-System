@@ -3,6 +3,7 @@
 -- Name the output column nummovies.
 
 SELECT count(*) nummovies
-FROM review R JOIN movies m on R.movid = m.movid AND EXTRACT(year from releasedate) = 2021
-JOIN moviegenres G ON R.movid = G.movid AND G.genre = 'Comedy'
+FROM movies M
+         JOIN moviegenres G ON M.movid = G.movid AND G.genre = 'Comedy' AND EXTRACT(year from releasedate) = 2021
 ;
+
