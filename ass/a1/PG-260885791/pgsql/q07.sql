@@ -44,7 +44,7 @@ FROM Movies M,
      uni U
 WHERE M.movid = U.mid
 UNION
-SELECT M.title, M.releasedate, concat(RL1.language, ',', RL2.language)
+SELECT M.title, M.releasedate, (RL1.language || ',' || RL2.language)
 FROM Movies M
          JOIN releaselanguages RL1 ON M.movid = RL1.movid AND RL1.language = 'French'
          JOIN releaselanguages RL2 ON M.movid = RL2.movid AND RL2.language = 'Italian'
