@@ -5,7 +5,7 @@
 -- Order the output such that the movies with most reviews are on the top.
 -- For movies with same number of reviews, order by their release dates and then by titles.
 
-WITH reviewcnt(mid, cnt) AS
+WITH reviewcnt(mid, numreviews) AS
     (
         SELECT r1.movid, COUNT(*)
         FROM review r1 JOIN movies m1 ON r1.movid = m1.movid AND EXTRACT(year from m1.releasedate) = 2021
@@ -18,7 +18,7 @@ WITH reviewcnt(mid, cnt) AS
              FROM review r2
              )
     )
-SELECT M.title, M.releasedate, RC.cnt
+SELECT M.title, M.releasedate, RC.numreviews AS numreviews
 FROM movies M JOIN reviewcnt RC ON M.movid = RC.mid
-ORDER BY RC.cnt DESC, M.releasedate, M.title
+ORDER BY RC.numreviews DESC, M.releasedate, M.title
 ;

@@ -7,11 +7,11 @@
 WITH bilingural(mid) AS
          (SELECT M1.movid
           FROM Movies M1
-                   JOIN Releaselanguages LF ON M1.movid = LF.movid AND LF.language = 'English'
+                   JOIN Releaselanguages LE ON M1.movid = LE.movid AND LE.language = 'English'
           INTERSECT
           SELECT M2.movid
           FROM Movies M2
-                   JOIN Releaselanguages LI ON M2.movid = LI.movid AND LI.language = 'French'),
+                   JOIN Releaselanguages LF ON M2.movid = LF.movid AND LF.language = 'French'),
      id(mid) AS
          (
              SELECT B.mid

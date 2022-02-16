@@ -39,12 +39,11 @@ WITH bilingual(mid) AS
              AND M.movid NOT IN
                  (SELECT B.mid FROM bilingual B)
      )
-SELECT M.title, M.releasedate, U.language
-FROM Movies M,
-     uni U
-WHERE M.movid = U.mid
+SELECT M.title, M.releasedate, U.language AS languages
+FROM Movies M
+         JOIN uni U ON M.movid = U.mid
 UNION
-SELECT M.title, M.releasedate, (RL1.language || ',' || RL2.language)
+SELECT M.title, M.releasedate, (RL1.language || ',' || RL2.language) AS languages
 FROM Movies M
          JOIN releaselanguages RL1 ON M.movid = RL1.movid AND RL1.language = 'French'
          JOIN releaselanguages RL2 ON M.movid = RL2.movid AND RL2.language = 'Italian'

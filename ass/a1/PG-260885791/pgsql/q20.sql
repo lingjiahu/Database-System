@@ -12,13 +12,13 @@
 -- Greek | Action
 -- Greek | Adventure
 
-WITH langen(lan, gen, cnt) AS
+WITH langen(language, genre, cnt) AS
     (SELECT L.language, G.genre, count(*)
         FROM releaselanguages L JOIN moviegenres G ON L.movid = G.movid
         GROUP BY L.language, G.genre)
-SELECT LG.lan, LG.gen
+SELECT LG.language, LG.genre
 FROM langen LG
 WHERE LG.cnt = (SELECT MAX(lg2.cnt)
-    FROM langen lg2 WHERE lg2.lan = LG.lan)
-ORDER BY LG.lan, LG.gen
+    FROM langen lg2 WHERE lg2.language = LG.language)
+ORDER BY LG.language, LG.genre
 ;

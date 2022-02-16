@@ -8,30 +8,32 @@
 -- For movies with same average rating, order them by the release date and then by the title.
 -- You can assume that there will be some Comedy movies reviewed by this user in the database.
 
-WITH cinebuff(uid, avg) AS
-         (SELECT u1.userid, AVG(r1.rating)
+WITH cinebuff(uid, avgrating) AS
+         (SELECT u1.userid, AVG(r1.rating) AS avgrating
           FROM users u1
                    JOIN review r1 on u1.userid = r1.userid AND u1.email = 'cinebuff@movieinfo.com' AND
-                                     r1.movid IN (SELECT m1.movid
-                                                  FROM movies m1
-                                                           JOIN moviegenres g1 ON m1.movid = g1.movid AND g1.genre = 'Comedy')
+                                     r1.movid IN (SELECT g1.movid
+                                                  FROM moviegenres g1
+                                                  WHERE g1.genre = 'Comedy')
           GROUP BY u1.userid),
-     avgratings(mid, avg) AS
-         (SELECT m2.movid, AVG(r2.rating) AS avgrating
-          FROM movies m2
-                   JOIN review r2 on m2.movid = r2.movid AND m2.movid IN
-                                     (
-                                         SELECT m3.movid -- comedy
-                                         FROM movies m3 JOIN moviegenres g2 ON m3.movid = g2.movid AND g2.genre = 'Comedy'
-                                         EXCEPT -- not reviewed by cinebuff
-                                         SELECT m4.movid
-                                         FROM movies m4 JOIN review r2 ON m4.movid = r2.movid AND r2.userid IN (SELECT cinebuff.uid FROM cinebuff)
-                                         )
-          GROUP BY m2.movid
-          HAVING AVG(r2.rating) > (SELECT cinebuff.avg FROM cinebuff)
+     avgratings(mid, avgrating) AS
+         (SELECT r2.movid, AVG(r2.rating) AS avgrating
+          FROM review r2
+          WHERE r2.movid IN
+                (
+                    SELECT g2.movid -- comedy
+                    FROM moviegenres g2
+                    WHERE g2.genre = 'Comedy'
+                        EXCEPT -- less
+                    SELECT r3.movid -- reviewed by cinebuff
+                    FROM review r3
+                    WHERE r3.userid IN (SELECT cinebuff.uid FROM cinebuff)
+                )
+          GROUP BY r2.movid
+          HAVING AVG(r2.rating) >= (SELECT cinebuff.avgrating FROM cinebuff)
          )
-SELECT M.title, M.releasedate, AR.avg AS avgrating
+SELECT M.title, M.releasedate, AR.avgrating AS avgrating
 FROM movies M
          JOIN avgratings AR ON M.movid = AR.mid
-ORDER BY AR.avg DESC, M.releasedate, M.title
+ORDER BY AR.avgrating DESC, M.releasedate, M.title
 ;

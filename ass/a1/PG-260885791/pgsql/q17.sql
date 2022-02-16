@@ -13,8 +13,9 @@ WITH cinebuff(uid, mid, rate) AS
              SELECT r2.userid
              FROM review r2
                       JOIN cinebuff c1 ON r2.movid = c1.mid
-                 AND (NOT r2.userid = c1.uid)
-                 AND (r2.rating >= (c1.rate - 1) AND r2.rating <= (c1.rate + 1))
+                 AND NOT r2.userid = c1.uid
+                 AND r2.rating >= (c1.rate - 1)
+                 AND r2.rating <= (c1.rate + 1)
          )
 SELECT DISTINCT U.email
 FROM users U

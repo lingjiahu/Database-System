@@ -10,20 +10,18 @@ WITH id(bid, version) AS
              FROM movies
              WHERE title = 'Ben-Hur'
          )
-SELECT R.userid
-FROM Review R,
+SELECT R1.userid
+FROM Review R1,
      id
-WHERE R.movid = id.bid
+WHERE R1.movid = id.bid
   AND id.version = 1959
   AND rating >= 7
-    EXCEPT (
-        SELECT R.userid
-        FROM Review R, id
-        WHERE R.movid = id.bid
-          AND id.version = 2016
-          AND rating > 4
-    )
+    EXCEPT
+SELECT R2.userid
+FROM Review R2,
+     id
+WHERE R2.movid = id.bid
+  AND id.version = 2016
+  AND rating > 4
 ORDER BY userid
 ;
-
--- SELECT * FROM review JOIN movies ON (review.movid = 1002 AND movies.movid = 1002) OR (review.movid = 1005 AND movies.movid = 1005) ORDER BY userid;

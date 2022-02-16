@@ -12,7 +12,7 @@ WITH mreview(mid, avgrating) AS
              GROUP BY m1.movid
              HAVING count(*) >= 2
          )
-SELECT M.title, M.releasedate, MR.avgrating
+SELECT M.title, M.releasedate, MR.avgrating AS avgrating
 FROM movies M JOIN mreview MR ON M.movid = MR.mid
 ORDER BY MR.avgrating DESC, M.releasedate, M.title
 ;

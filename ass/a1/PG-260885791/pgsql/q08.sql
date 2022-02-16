@@ -3,16 +3,14 @@
 -- (they are free to write reviews for any other movies).
 -- Order the output by the email.
 
-
 WITH fr(mid) AS
          (
              SELECT M.movid
              FROM movies M
                       JOIN releaselanguages rl on M.movid = rl.movid AND rl.language = 'French' AND M.movid NOT IN
-                          (SELECT M1.movid
-                              FROM movies M1
-                                       JOIN releaselanguages rl
-                                            on M1.movid = rl.movid AND NOT rl.language = 'French')
+                          (SELECT rl1.movid -- select movie if released in !french
+                                       FROM releaselanguages rl1
+                                            WHERE M.movid = rl1.movid AND NOT rl1.language = 'French')
          ),
      id(uid) AS
          (

@@ -4,7 +4,7 @@
 -- Name the number of reviews as numreviews.
 -- Order the output based on the title of the movie.
 
-WITH numreview(mid, num) AS
+WITH numreview(mid, numreviews) AS
          (
              SELECT m1.movid, count(*) AS numreviews
              FROM movies m1
@@ -13,16 +13,12 @@ WITH numreview(mid, num) AS
              UNION
              SELECT m2.movid, 0 AS numreviews
              FROM movies m2
-             WHERE m2.movid NOT IN (SELECT m3.movid
-                                    FROM movies m3
-                                             JOIN review r3 on m3.movid = r3.movid
-                                    GROUP BY m3.movid)
+             WHERE m2.movid NOT IN (SELECT r2.movid
+                                    FROM review r2)
          )
-SELECT M.title, NR.num AS numreviews
+SELECT M.title, NR.numreviews AS numreviews
 FROM movies M
-         JOIN numreview NR ON M.movid = NR.mid
-WHERE M.releasedate = (SELECT MAX(M4.releasedate)
-                       FROM movies m4
-)
+         JOIN numreview NR ON M.movid = NR.mid AND M.releasedate = (SELECT MAX(m3.releasedate)
+                                                                    FROM movies m3)
 ORDER BY M.title
 ;
