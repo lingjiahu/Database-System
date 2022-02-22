@@ -1,0 +1,5 @@
+-- list the results of all the blood iron tests
+-- that was performed on (Mother) Victoria Gutierrez for her second pregnancy.
+-- The output should have lab date and the result
+-- (the latter you can assume as a simple VARCHAR field with some text info
+-- keep it a small field so your screen does not get cluttered)
