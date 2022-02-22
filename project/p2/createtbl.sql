@@ -7,7 +7,7 @@
 -- Remember to put the create table ddls for the tables with foreign key references
 --    ONLY AFTER the parent tables has already been created.
 
-CREATE TABLE MOTHER
+CREATE TABLE MOTHERS
 (
     mramq       VARCHAR(12)  NOT NULL,
     mname       VARCHAR(50)  NOT NULL,
@@ -20,13 +20,13 @@ CREATE TABLE MOTHER
     PRIMARY KEY (mramq)
 );
 
-CREATE TABLE FATHER
+CREATE TABLE FATHERS
 (
     fid        INTEGER     NOT NULL,
     framq       VARCHAR(12),
     fname       VARCHAR(50) NOT NULL,
     ftel        VARCHAR(20) NOT NULL,
-    femail      VARCHAR(30),
+    femail      VARCHAR(30) UNIQUE,
     fdob        DATE        NOT NULL,
     fbloodtype  VARCHAR(3),
     faddress    VARCHAR(100),
@@ -34,14 +34,14 @@ CREATE TABLE FATHER
     PRIMARY KEY (fid)
 );
 
-CREATE TABLE COUPLE
+CREATE TABLE COUPLES
 (
     cid  INTEGER     NOT NULL,
     mramq VARCHAR(12) NOT NULL,
     fid  INTEGER     NOT NULL,
     PRIMARY KEY (cid),
-    FOREIGN KEY (mramq) REFERENCES MOTHER,
-    FOREIGN KEY (fid) REFERENCES FATHER
+    FOREIGN KEY (mramq) REFERENCES MOTHERS,
+    FOREIGN KEY (fid) REFERENCES FATHERS
 );
 
 CREATE TABLE HCINSTITUTIONS
@@ -49,7 +49,7 @@ CREATE TABLE HCINSTITUTIONS
     hcid    INTEGER      NOT NULL,
     hcname    VARCHAR(30)  NOT NULL,
     hctel     VARCHAR(20)  NOT NULL,
-    hcemail   VARCHAR(30)  NOT NULL,
+    hcemail   VARCHAR(30)  UNIQUE NOT NULL,
     hcaddress VARCHAR(100) NOT NULL,
     website VARCHAR(50),
     PRIMARY KEY (hcid)
@@ -75,7 +75,7 @@ CREATE TABLE MIDWIVES
     hcid  INTEGER     NOT NULL,
     mwname  VARCHAR(30) NOT NULL,
     mwtel   VARCHAR(20) NOT NULL,
-    mwemail VARCHAR(30) NOT NULL,
+    mwemail VARCHAR(30) UNIQUE NOT NULL,
     PRIMARY KEY (pid),
     FOREIGN KEY (hcid) REFERENCES HCINSTITUTIONS
 );
@@ -91,7 +91,7 @@ CREATE TABLE PREGNANCIES
     ppid    INTEGER,
     bpid INTEGER,
     PRIMARY KEY (cid, birthym),
-    FOREIGN KEY (cid) REFERENCES COUPLE,
+    FOREIGN KEY (cid) REFERENCES COUPLES,
     FOREIGN KEY (hcid) REFERENCES HCINSTITUTIONS,
     FOREIGN KEY (ppid) REFERENCES MIDWIVES,
     FOREIGN KEY (bpid) REFERENCES MIDWIVES
@@ -102,7 +102,7 @@ CREATE TABLE INVITATIONS
     cid  INTEGER NOT NULL,
     hcid INTEGER NOT NULL,
     PRIMARY KEY (cid, hcid),
-    FOREIGN KEY (cid) REFERENCES COUPLE,
+    FOREIGN KEY (cid) REFERENCES COUPLES,
     FOREIGN KEY (hcid) REFERENCES HCINSTITUTIONS
 );
 
@@ -110,7 +110,7 @@ CREATE TABLE INFOSESSIONS
 (
     isid        INTEGER     NOT NULL,
     hcid        INTEGER     NOT NULL,
-    pid         INTEGER     NOT NULL,
+    pid         INTEGER     ,
     sessiondate DATE        NOT NULL,
     sessiontime TIME        NOT NULL,
     language    VARCHAR(10) NOT NULL,
@@ -123,7 +123,7 @@ CREATE TABLE REGISTRATIONS
 (
     cid  INTEGER NOT NULL,
     isid INTEGER NOT NULL,
-    FOREIGN KEY (cid) REFERENCES COUPLE,
+    FOREIGN KEY (cid) REFERENCES COUPLES,
     FOREIGN KEY (isid) REFERENCES INFOSESSIONS
 );
 
@@ -184,7 +184,7 @@ CREATE TABLE TESTS
     examdate  DATE,
     result    VARCHAR(100),
     PRIMARY KEY (tid),
-    FOREIGN KEY (ramq) REFERENCES MOTHER,
+    FOREIGN KEY (ramq) REFERENCES MOTHERS,
     FOREIGN KEY (bid) REFERENCES BABIES,
     FOREIGN KEY (aid) REFERENCES APPOINTMENTS,
     FOREIGN KEY (techid) REFERENCES TECHNICIANS

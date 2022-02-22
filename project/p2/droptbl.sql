@@ -7,9 +7,9 @@
 -- Remember to put the drop table ddls for the tables with foreign key references
 --    ONLY AFTER the parent tables has already been dropped (reverse of the creation order).
 
-DROP TABLE MOTHER;
-DROP TABLE FATHER;
-DROP TABLE COUPLE;
+DROP TABLE MOTHERS;
+DROP TABLE FATHERS;
+DROP TABLE COUPLES;
 DROP TABLE HCINSTITUTIONS;
 DROP TABLE COMMUNITYCLINICS;
 DROP TABLE BIRTHINGCENTERS;

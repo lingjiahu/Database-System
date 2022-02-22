@@ -85,23 +85,35 @@ VALUES ('2001', '2021-01-01', NULL, NULL, NULL, NULL, NULL, NULL),
 ;
 
 INSERT INTO INVITATIONS
-VALUES (),
+VALUES ('2001', '3002'),
+       ('2002', '3010'),
+       ('2003', '3003'),
+       ('2004', '3006'),
+       ('2005', '3001')
 ;
 
 INSERT INTO INFOSESSIONS
-VALUES (),
+VALUES ('5001', '3002', '4001', '2019-08-09', '09:30', 'English'),
+       ('5002', '3004', '4001', '2020-12-09', '09:30', 'English'),
+       ('5003', '3005', NULL, '2020-08-09', '09:30', 'French'),
+       ('5004', '3008', NULL, '2020-10-09', '09:30', 'French'),
+       ('5005', '3009', NULL, '2021-01-01', '09:30', 'French')
 ;
 
 INSERT INTO REGISTRATIONS
-VALUES (),
+VALUES ('2001', '5001'),
+       ('2002', '5002'),
+       ('2003', '5003'),
+       ('2004', '5004'),
+       ('2005', '5005')
 ;
 
 INSERT INTO BABIES
-VALUES (),
+VALUES ('6001', '2001','2020-02-01', 'Baby Gutierrez', 'male', NULL, '2020-02-05', '10:10')
 ;
 
 INSERT INTO APPOINTMENTS
-VALUES (),
+VALUES (''),
 ;
 
 INSERT INTO NOTES
