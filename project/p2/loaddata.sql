@@ -7,7 +7,7 @@ CONNECT TO cs421;
 -- Remember to put the INSERT statements for the tables with foreign key references
 --    ONLY AFTER the parent tables!
 
-INSERT INTO MOTHER
+INSERT INTO MOTHERS
 VALUES ('GUTV92030001', 'Victoria Gutierrez', '5140000001', 'emma@gmail.com', '1992-03-06', 'B',
         '3838 René-Lévesque Blvd', 'teacher'),
        ('NINK83060002', 'Kazunari Ninomiya', '5140000002', 'kaz@gmail.com', '1983-06-17', 'O',
@@ -20,7 +20,7 @@ VALUES ('GUTV92030001', 'Victoria Gutierrez', '5140000001', 'emma@gmail.com', '1
         '3334 rue Ontario Ouest', 'doctor')
 ;
 
-INSERT INTO FATHER
+INSERT INTO FATHERS
 VALUES ('1001', 'GUTT88020001', 'Tom Gutierrez', '5140010001', 'gut@gmail.com', '1988-02-20', 'B', NULL, 'lawyer'),
        ('1002', 'NINA82120002', 'Aiba Ninomiya', '5140010002', NULL, '1982-12-24', 'A', NULL, 'surgeon'),
        ('1003', NULL, 'Sam Green', '5140010003', 'sam@gmail.com', '1998-02-27', NULL, NULL, 'actor'),
@@ -28,7 +28,7 @@ VALUES ('1001', 'GUTT88020001', 'Tom Gutierrez', '5140010001', 'gut@gmail.com', 
        ('1005', 'BROL95100005', 'Louis Brown', '5140010005', NULL, '1995-09-10', NULL, NULL, 'farmer')
 ;
 
-INSERT INTO COUPLE
+INSERT INTO COUPLES
 VALUES ('2001', 'GUTV92030001', '1001'),
        ('2002', 'NINK83060002', '1002'),
        ('2003', 'YANC01060003', '1003'),
@@ -77,11 +77,11 @@ VALUES ('4001', '3002', 'Marion Girard', '5140040001', 'mg@gamil.com'),
 
 -- TODO how to ensure a couple must be involved in a pregnancy
 INSERT INTO PREGNANCIES
-VALUES ('2001', '2021-01-01', NULL, NULL, NULL, NULL, NULL, NULL),
-       ('2001', '2020-02-01', NULL, NULL, NULL, '3002', '4001', NULL),
-       ('2003', '2021-05-02', NULL, NULL, NULL, '3001', NULL, NULL),
-       ('2004', '2021-06-01', NULL, NULL, NULL, '3002', NULL, NULL),
-       ('2005', '2021-05-01', NULL, NULL, NULL, NULL, NULL, NULL)
+VALUES ('2001', '2021-01-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL),
+       ('2001', '2020-02-01', NULL, NULL, NULL, '3002', TRUE,'4001', NULL),
+       ('2003', '2021-05-02', NULL, NULL, NULL, '3001', NULL, NULL, NULL),
+       ('2004', '2021-06-01', NULL, NULL, NULL, '3002', NULL, NULL, NULL),
+       ('2005', '2021-05-01', NULL, NULL, NULL, NULL, NULL, NULL, NULL)
 ;
 
 INSERT INTO INVITATIONS

@@ -3,15 +3,19 @@
 -- you can assume that there is only one facility by that name
 
 WITH curpregs(cid, birthym) AS
-         (SELECT P.CID, P.BIRTHYM
-          FROM Pregnancies P
-                   JOIN MIDWIVES MW ON P.PPID = MW.PID AND MW.HCID = 'Lac- Saint-Louis' AND
-                                       NOT EXISTS(SELECT B.bid
-                                                  FROM Babies B
-                                                  WHERE B.BDOB IS NULL)
+         (SELECT p.cid, p.birthym
+          FROM pregnancies p
+                   JOIN midwives mw ON p.ppid = mw.pid AND mw.hcid = 'Lac- Saint-Louis' AND
+                                       NOT EXISTS(SELECT b.bid
+                                                  FROM babies b
+                                                  WHERE b.cid = p.cid
+                                                    AND b.birthym = p.birthym
+                                                    AND b.bdob IS NULL)
          ),
-     curcouple(mramq) AS ( SELECT C.MRAMQ
-         FROM Couples C JOIN curpregs cp ON C.CID = cp.cid)
-SELECT M.mramq, M.mname, M.mtel
-FROM MOTHERS M JOIN curcouple cc ON M.MRAMQ = cc.mramq
+     curcouple(mramq) AS (SELECT c.mramq
+                          FROM couples c
+                                   JOIN curpregs cp ON c.cid = cp.cid)
+SELECT m.mramq, m.mname, m.mtel
+FROM mothers m
+         JOIN curcouple cc ON m.mramq = cc.mramq
 ;
