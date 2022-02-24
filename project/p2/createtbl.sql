@@ -191,5 +191,5 @@ CREATE TABLE tests
     FOREIGN KEY (aid) REFERENCES appointments,
     FOREIGN KEY (techid) REFERENCES technicians,
     CHECK (examdate IS NULL OR examdate >= pscrpdate),
-    CHECK ( ramq IS NOT NULL OR bid IS NOT NULL)
+    CHECK (ramq IS NOT NULL OR bid IS NOT NULL)
 );

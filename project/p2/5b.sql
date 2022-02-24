@@ -30,7 +30,7 @@ WITH prg(cid, birthym) AS (
          ),
      bitest(tid) AS
              (SELECT t1.tid
-                 FROM tests t1 JOIN aptpreg ap ON t1.aid = ap.aid AND t1.type = 'blood iron')
+                 FROM tests t1 JOIN aptpreg ap ON t1.aid = ap.aid AND t1.type = 'blood iron' AND t1.examdate IS NOT NULL)
 SELECT t.examdate AS date, t.result
 FROM tests t
          JOIN bitest bi ON t.tid = bi.tid

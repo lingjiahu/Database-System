@@ -15,3 +15,8 @@ SELECT * FROM midwifeinfo LIMIT 5;
 -- You can assume there is only one facility with that name.
 -- Truncate the output to just 5 records.
 SELECT * FROM midwifeinfo WHERE hcname = 'Lac-Saint-Louis' LIMIT 5;
+
+
+INSERT INTO midwifeinfo
+VALUES ('4015', 'Nanda Suqqo', '5140000015', 'ns@gmail.com', 'hcnew', '2538 47th Avenue')
+;

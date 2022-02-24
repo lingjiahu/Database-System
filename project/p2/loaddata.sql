@@ -138,14 +138,13 @@ VALUES ('7001', '2003', '2022-05-02', '4001', '2022-03-20','10:30'),
 
 ;
 
--- INSERT INTO notes
--- VALUES (),
--- ;
---
--- INSERT INTO technicians
--- VALUES (),
--- ;
---
--- INSERT INTO tests
--- VALUES (),
--- ;
+-- tests
+
+
+
+-- notes
+
+
+
+
+-- technicians
