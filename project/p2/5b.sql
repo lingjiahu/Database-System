@@ -4,7 +4,8 @@
 -- (the latter you can assume as a simple VARCHAR field with some text info
 -- keep it a small field so your screen does not get cluttered)
 
-WITH prg(cid, birthym) AS ( -- the second pregnancy of Victoria Gutierrez
+-- the second pregnancy of Victoria Gutierrez
+WITH prg(cid, birthym) AS (
     SELECT p.cid, p.birthym
     FROM pregnancies p
     WHERE p.cid IN (SELECT c.cid
@@ -16,13 +17,15 @@ WITH prg(cid, birthym) AS ( -- the second pregnancy of Victoria Gutierrez
     )
     LIMIT 1 OFFSET 1
 ),
-     aptpreg(aid) AS -- all appointments for the second pregnancy
+     -- all appointments for the second pregnancy
+     aptpreg(aid) AS
          (SELECT a.aid
           FROM appointments a
                    JOIN prg
                         ON a.cid = prg.cid AND a.birthym = prg.birthym
          ),
-     bitest(tid) AS -- all blood iron tests performed
+     -- all blood iron tests performed
+     bitest(tid) AS
          (SELECT t1.tid
           FROM tests t1
                    JOIN aptpreg ap ON t1.aid = ap.aid AND t1.type = 'blood iron' AND t1.examdate IS NOT NULL)

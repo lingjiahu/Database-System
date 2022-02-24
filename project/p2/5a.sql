@@ -22,7 +22,7 @@ WITH aptpreg(aid, cid, birthym) AS
      aptmother(aid, mramq, manme, mtel) AS
          (SELECT ac.aid, m.mramq, m.mname, m.mtel
           FROM mothers m
-                   JOIN aptcouple ac ON m.mramq = ac.ramq)
+                   JOIN aptcouple ac ON m.mramq = ac.mramq)
 SELECT a.apptdate AS date, a.apptime AS time, am.mramq, am.manme AS name, am.mtel AS phone
 FROM appointments a
          JOIN aptmother am ON a.aid = am.aid

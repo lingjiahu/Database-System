@@ -3,18 +3,21 @@
 -- List them only once even if they had multiple pregnancies where they had more than one baby.
 -- Count the babies whether they are born or not (yet).
 
-WITH prgbaby(cid, birthmy, bid) AS -- all pregnancies with babies
+-- all pregnancies with babies
+WITH prgbaby(cid, birthmy, bid) AS
          (
              SELECT p.cid, p.birthym, b.bid
              FROM pregnancies p
                       JOIN babies b ON p.cid = b.cid AND p.birthym = b.birthym
          ),
-     multiprg(cid) AS -- all multibaby pregnancies
+     -- all multibaby pregnancies
+     multiprg(cid) AS
          (SELECT pb.cid
           FROM prgbaby pb
           GROUP BY pb.cid
           HAVING COUNT(*) > 1),
-     multimother(mramq) AS -- all mothers involved
+     -- all mothers involved
+     multimother(mramq) AS
          (
              SELECT DISTINCT m1.mramq
              FROM mothers m1

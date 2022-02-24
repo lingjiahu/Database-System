@@ -6,7 +6,8 @@
 -- in order to figure out if the pregnancy will fall into a specific month.
 -- Otherwise (if that information is not yet available), use the expected time frame for birth (year-month) that was provided initially.
 
-WITH allprg(ppid, duedate) AS -- all pregnancies
+-- all pregnancies
+WITH allprg(ppid, duedate) AS
          (
              SELECT p1.ppid, p1.finalexp
              FROM pregnancies p1
@@ -16,7 +17,8 @@ WITH allprg(ppid, duedate) AS -- all pregnancies
              FROM pregnancies p2
              WHERE p2.finalexp IS NULL
          ),
-     allhc(hcid, hcname, duedate) AS -- all related health care institutions for July 2022
+     -- all related health care institutions for July 2022
+     allhc(hcid, hcname, duedate) AS
          (SELECT hc.hcid, hc.hcname, ap.duedate
           FROM hcinstitutions hc
                    JOIN allprg ap ON hc.hcid IN (SELECT mw.hcid
