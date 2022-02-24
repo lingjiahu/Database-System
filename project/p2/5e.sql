@@ -24,15 +24,3 @@ SELECT m.mramq, m.mname
 FROM mothers m
          JOIN multimother mm ON m.mramq = mm.mramq
 ;
-
-
-WITH prgbaby(cid, birthmy, bid) AS
-         (
-             SELECT p.cid, p.birthym, b.bid
-             FROM pregnancies p
-                      JOIN babies b ON p.cid = b.cid AND p.birthym = b.birthym
-         )
-SELECT pb.cid
-FROM prgbaby pb
-GROUP BY pb.cid
-HAVING COUNT(*) > 1
