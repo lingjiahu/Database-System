@@ -9,7 +9,7 @@
 -- all appointments for the pregnancy
 -- all bi tests associated with the appointments
 --
-WITH prg(cid, birthym) AS (
+WITH prg(cid, birthym) AS ( -- the second pregnancy of Victoria Gutierrez
     SELECT p.cid, p.birthym
     FROM pregnancies p
     WHERE p.cid IN (SELECT c.cid
@@ -21,16 +21,16 @@ WITH prg(cid, birthym) AS (
     )
     LIMIT 1 OFFSET 1
 ),
-     aptpreg(aid) AS
+     aptpreg(aid) AS -- all appointments for the second pregnancy
          (SELECT a.aid
           FROM appointments a
-
                    JOIN prg
-                        ON a.cid = prg.cid
+                        ON a.cid = prg.cid AND a.birthym = prg.birthym
          ),
-     bitest(tid) AS
-             (SELECT t1.tid
-                 FROM tests t1 JOIN aptpreg ap ON t1.aid = ap.aid AND t1.type = 'blood iron' AND t1.examdate IS NOT NULL)
+     bitest(tid) AS -- all blood iron tests performed
+         (SELECT t1.tid
+          FROM tests t1
+                   JOIN aptpreg ap ON t1.aid = ap.aid AND t1.type = 'blood iron' AND t1.examdate IS NOT NULL)
 SELECT t.examdate AS date, t.result
 FROM tests t
          JOIN bitest bi ON t.tid = bi.tid
