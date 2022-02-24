@@ -4,11 +4,6 @@
 -- (the latter you can assume as a simple VARCHAR field with some text info
 -- keep it a small field so your screen does not get cluttered)
 
-
--- couple id of VG
--- all appointments for the pregnancy
--- all bi tests associated with the appointments
---
 WITH prg(cid, birthym) AS ( -- the second pregnancy of Victoria Gutierrez
     SELECT p.cid, p.birthym
     FROM pregnancies p
