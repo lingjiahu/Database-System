@@ -38,7 +38,7 @@ CREATE TABLE couples
 (
     cid   INTEGER     NOT NULL,
     mramq VARCHAR(12) NOT NULL,
-    fid   INTEGER     NOT NULL,
+    fid   INTEGER,
     PRIMARY KEY (cid),
     FOREIGN KEY (mramq) REFERENCES mothers,
     FOREIGN KEY (fid) REFERENCES fathers
@@ -180,6 +180,7 @@ CREATE TABLE tests
     bid       INTEGER,
     aid       INTEGER NOT NULL,
     techid    INTEGER,
+    type VARCHAR(20) NOT NULL,
     pscrpdate DATE    NOT NULL,
     testdate  DATE,
     examdate  DATE,
@@ -189,5 +190,6 @@ CREATE TABLE tests
     FOREIGN KEY (bid) REFERENCES babies,
     FOREIGN KEY (aid) REFERENCES appointments,
     FOREIGN KEY (techid) REFERENCES technicians,
-    CHECK (examdate IS NULL OR examdate >= pscrpdate)
+    CHECK (examdate IS NULL OR examdate >= pscrpdate),
+    CHECK ( ramq IS NOT NULL OR bid IS NOT NULL)
 );
