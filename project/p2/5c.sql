@@ -19,7 +19,7 @@ WITH allprg(ppid, duedate) AS
      allhc(hcid, hcname, duedate) AS
          (SELECT hc.hcid, hc.hcname, ap.duedate
           FROM hcinstitutions hc
-                   JOIN allprg ap ON ap.ppid IN (SELECT mw.hcid
+                   JOIN allprg ap ON hc.hcid IN (SELECT mw.hcid
                                                  FROM midwives mw
                                                  WHERE mw.pid = ap.ppid) AND
                                      EXTRACT(year from ap.duedate) = 2022 AND EXTRACT(month from ap.duedate) = 07)
@@ -27,3 +27,21 @@ SELECT allhc.hcname, COUNT(*) AS numpregnancies
 FROM allhc
 GROUP BY allhc.hcid, allhc.hcname
 ;
+
+
+WITH allprg(ppid, duedate) AS
+         (
+             SELECT p1.ppid, p1.finalexp
+             FROM pregnancies p1
+             WHERE p1.finalexp IS NOT NULL
+             UNION
+             SELECT p2.ppid, p2.birthym
+             FROM pregnancies p2
+             WHERE p2.finalexp IS NULL
+         )
+         SELECT hc.hcid, hc.hcname, ap.duedate
+          FROM hcinstitutions hc
+                   JOIN allprg ap ON hc.hcid IN (SELECT mw.hcid
+                                                 FROM midwives mw
+                                                 WHERE mw.pid = ap.ppid) AND
+                                     EXTRACT(year from ap.duedate) = 2022 AND EXTRACT(month from ap.duedate) = 07

@@ -10,13 +10,29 @@ WITH prgbaby(cid, birthmy, bid) AS
                       JOIN babies b ON p.cid = b.cid AND p.birthym = b.birthym
          ),
      multiprg(cid) AS
-             (SELECT pb.cid
-                 FROM prgbaby pb
-                 GROUP BY pb.cid
-                 HAVING COUNT(*) > 1)
+         (SELECT pb.cid
+          FROM prgbaby pb
+          GROUP BY pb.cid
+          HAVING COUNT(*) > 1),
+     multimother(mramq) AS
+         (
+             SELECT DISTINCT m1.mramq
+             FROM mothers m1
+                      JOIN couples c ON m1.mramq = c.mramq AND c.cid IN (SELECT mp.cid FROM multiprg mp)
+         )
 SELECT m.mramq, m.mname
 FROM mothers m
-         JOIN multiprg mp ON mp.cid IN (SELECT c.mramq
-                                        FROM couples c
-                                        WHERE c.cid = mp.cid)
+         JOIN multimother mm ON m.mramq = mm.mramq
 ;
+
+
+WITH prgbaby(cid, birthmy, bid) AS
+         (
+             SELECT p.cid, p.birthym, b.bid
+             FROM pregnancies p
+                      JOIN babies b ON p.cid = b.cid AND p.birthym = b.birthym
+         )
+SELECT pb.cid
+FROM prgbaby pb
+GROUP BY pb.cid
+HAVING COUNT(*) > 1
