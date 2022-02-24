@@ -95,7 +95,8 @@ CREATE TABLE pregnancies
     FOREIGN KEY (cid) REFERENCES couples,
     FOREIGN KEY (hcid) REFERENCES hcinstitutions,
     FOREIGN KEY (ppid) REFERENCES midwives,
-    FOREIGN KEY (bpid) REFERENCES midwives
+    FOREIGN KEY (bpid) REFERENCES midwives,
+    CHECK ( finalexp IS NULL OR finalexp = firstexp OR finalexp = secondexp )
 );
 
 CREATE TABLE invitations
