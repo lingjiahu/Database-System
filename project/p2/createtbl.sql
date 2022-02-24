@@ -2,7 +2,7 @@
 -- Make sure to terminate each statement with a semicolon (;)
 
 -- LEAVE this statement on. It is required to connect to your database.
--- CONNECT TO cs421;
+CONNECT TO cs421;
 
 -- Remember to put the create table ddls for the tables with foreign key references
 --    ONLY AFTER the parent tables has already been created.
@@ -15,7 +15,7 @@ CREATE TABLE mothers
     memail      VARCHAR(30)  NOT NULL,
     mdob        DATE         NOT NULL,
     mbloodtype  VARCHAR(10),
-    maddress    VARCHAR(100) NOT NULL,
+    maddress    VARCHAR(70) NOT NULL,
     mprofession VARCHAR(20)  NOT NULL,
     PRIMARY KEY (mramq)
 );
@@ -29,7 +29,7 @@ CREATE TABLE fathers
     femail      VARCHAR(30),
     fdob        DATE        NOT NULL,
     fbloodtype  VARCHAR(3),
-    faddress    VARCHAR(100),
+    faddress    VARCHAR(70),
     fprofession VARCHAR(20) NOT NULL,
     PRIMARY KEY (fid)
 );
@@ -50,7 +50,7 @@ CREATE TABLE hcinstitutions
     hcname    VARCHAR(30)        NOT NULL,
     hctel     VARCHAR(20)        NOT NULL,
     hcemail   VARCHAR(30) UNIQUE NOT NULL,
-    hcaddress VARCHAR(100)       NOT NULL,
+    hcaddress VARCHAR(70)       NOT NULL,
     website   VARCHAR(50),
     PRIMARY KEY (hcid)
 );
@@ -88,7 +88,7 @@ CREATE TABLE pregnancies
     secondexp  DATE,
     finalexp   DATE,
     hcid       INTEGER,
-    interested BOOLEAN DEFAULT FALSE,
+    interested BOOLEAN,
     ppid       INTEGER,
     bpid       INTEGER,
     PRIMARY KEY (cid, birthym),
@@ -125,6 +125,7 @@ CREATE TABLE registrations
 (
     cid  INTEGER NOT NULL,
     isid INTEGER NOT NULL,
+    attended BOOLEAN DEFAULT FALSE NOT NULL,
     FOREIGN KEY (cid) REFERENCES couples,
     FOREIGN KEY (isid) REFERENCES infosessions
 );
@@ -177,7 +178,7 @@ CREATE TABLE technicians
 CREATE TABLE tests
 (
     tid       INTEGER NOT NULL,
-    ramq      VARCHAR(12),
+    mramq      VARCHAR(12),
     bid       INTEGER,
     aid       INTEGER NOT NULL,
     techid    INTEGER,
@@ -187,10 +188,9 @@ CREATE TABLE tests
     examdate  DATE,
     result    VARCHAR(100),
     PRIMARY KEY (tid),
-    FOREIGN KEY (ramq) REFERENCES mothers,
+    FOREIGN KEY (mramq) REFERENCES mothers,
     FOREIGN KEY (bid) REFERENCES babies,
     FOREIGN KEY (aid) REFERENCES appointments,
     FOREIGN KEY (techid) REFERENCES technicians,
-    CHECK (examdate IS NULL OR examdate >= pscrpdate),
-    CHECK (ramq IS NOT NULL OR bid IS NOT NULL)
+    CHECK (mramq IS NOT NULL OR bid IS NOT NULL)
 );
