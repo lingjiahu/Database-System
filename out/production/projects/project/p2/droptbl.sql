@@ -7,6 +7,20 @@ CONNECT TO cs421;
 -- Remember to put the drop table ddls for the tables with foreign key references
 --    ONLY AFTER the parent tables has already been dropped (reverse of the creation order).
 
--- This is only an example of how you add drop table ddls to this file.
---   You may remove it.
-DROP TABLE MYTEST01;
+DROP TABLE mothers;
+DROP TABLE fathers;
+DROP TABLE couples;
+DROP TABLE hcinstitutions;
+DROP TABLE communityclinics;
+DROP TABLE birthingcenters;
+DROP TABLE pregnancies;
+DROP TABLE invitations;
+DROP TABLE midwives;
+DROP TABLE infosessions;
+DROP TABLE registrations;
+DROP TABLE babies;
+DROP TABLE appointments;
+DROP TABLE notes;
+DROP TABLE technicians;
+DROP TABLE tests;
+DROP VIEW midwifeinfo;

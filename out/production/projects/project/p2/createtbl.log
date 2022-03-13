@@ -1,0 +1,78 @@
+(c) Copyright IBM Corporation 1993,2007
+Command Line Processor for DB2 Client 11.5.4.0
+
+You can issue database manager commands and SQL statements from the command 
+prompt. For example:
+    db2 => connect to sample
+    db2 => bind sample.bnd
+
+For general help, type: ?.
+For command help, type: ? command, where command can be
+the first few keywords of a database manager command. For example:
+ ? CATALOG DATABASE for help on the CATALOG DATABASE command
+ ? CATALOG          for help on all of the CATALOG commands.
+
+To exit db2 interactive mode, type QUIT at the command prompt. Outside 
+interactive mode, all commands must be prefixed with 'db2'.
+To list the current command option settings, type LIST COMMAND OPTIONS.
+
+For more detailed help, refer to the Online Reference Manual.
+
+db2 => db2 => db2 => db2 => db2 => CONNECT TO cs421
+
+   Database Connection Information
+
+ Database server        = DB2/LINUXX8664 11.5.4.0
+ SQL authorization ID   = LHU26
+ Local database alias   = CS421
+
+
+db2 => db2 => db2 => db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE mothers ( mramq       VARCHAR(12)  NOT NULL, mname       VARCHAR(50)  NOT NULL, mtel        VARCHAR(20)  NOT NULL, memail      VARCHAR(30)  NOT NULL, mdob        DATE         NOT NULL, mbloodtype  VARCHAR(10), maddress    VARCHAR(70) NOT NULL, mprofession VARCHAR(20)  NOT NULL, PRIMARY KEY (mramq) )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE fathers ( fid         INTEGER     NOT NULL, framq       VARCHAR(12), fname       VARCHAR(50) NOT NULL, ftel        VARCHAR(20) NOT NULL, femail      VARCHAR(30), fdob        DATE        NOT NULL, fbloodtype  VARCHAR(3), faddress    VARCHAR(70), fprofession VARCHAR(20) NOT NULL, PRIMARY KEY (fid) )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE couples ( cid   INTEGER     NOT NULL, mramq VARCHAR(12) NOT NULL, fid   INTEGER, PRIMARY KEY (cid), FOREIGN KEY (mramq) REFERENCES mothers, FOREIGN KEY (fid) REFERENCES fathers )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE hcinstitutions ( hcid      INTEGER            NOT NULL, hcname    VARCHAR(30)        NOT NULL, hctel     VARCHAR(20)        NOT NULL, hcemail   VARCHAR(30) UNIQUE NOT NULL, hcaddress VARCHAR(70)       NOT NULL, website   VARCHAR(50), PRIMARY KEY (hcid) )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE communityclinics ( hcid INTEGER NOT NULL, PRIMARY KEY (hcid), FOREIGN KEY (hcid) REFERENCES hcinstitutions )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE birthingcenters ( hcid INTEGER NOT NULL, PRIMARY KEY (hcid), FOREIGN KEY (hcid) REFERENCES hcinstitutions )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE midwives ( pid     INTEGER            NOT NULL, hcid    INTEGER            NOT NULL, mwname  VARCHAR(30)        NOT NULL, mwtel   VARCHAR(20)        NOT NULL, mwemail VARCHAR(30) UNIQUE NOT NULL, PRIMARY KEY (pid), FOREIGN KEY (hcid) REFERENCES hcinstitutions )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE pregnancies ( cid        INTEGER NOT NULL, birthym    DATE    NOT NULL, firstexp   DATE, secondexp  DATE, finalexp   DATE, hcid       INTEGER, interested BOOLEAN, ppid       INTEGER, bpid       INTEGER, PRIMARY KEY (cid, birthym), FOREIGN KEY (cid) REFERENCES couples, FOREIGN KEY (hcid) REFERENCES hcinstitutions, FOREIGN KEY (ppid) REFERENCES midwives, FOREIGN KEY (bpid) REFERENCES midwives, CHECK ( finalexp IS NULL OR finalexp = firstexp OR finalexp = secondexp ) )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE invitations ( cid  INTEGER NOT NULL, hcid INTEGER NOT NULL, PRIMARY KEY (cid, hcid), FOREIGN KEY (cid) REFERENCES couples, FOREIGN KEY (hcid) REFERENCES hcinstitutions )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE infosessions ( isid        INTEGER     NOT NULL, hcid        INTEGER     NOT NULL, pid         INTEGER, sessiondate DATE        NOT NULL, sessiontime TIME        NOT NULL, language    VARCHAR(10) NOT NULL, PRIMARY KEY (isid), FOREIGN KEY (hcid) REFERENCES hcinstitutions, FOREIGN KEY (pid) REFERENCES midwives )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE registrations ( cid  INTEGER NOT NULL, isid INTEGER NOT NULL, attended BOOLEAN DEFAULT FALSE NOT NULL, FOREIGN KEY (cid) REFERENCES couples, FOREIGN KEY (isid) REFERENCES infosessions )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE babies ( bid        INTEGER NOT NULL, cid        INTEGER NOT NULL, birthym    DATE    NOT NULL, bname      VARCHAR(30), gender     VARCHAR(10), bbloodtype VARCHAR(10), bdob       DATE, birthtime  TIME, PRIMARY KEY (bid), FOREIGN KEY (cid, birthym) REFERENCES pregnancies )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE appointments ( aid      INTEGER NOT NULL, cid      INTEGER NOT NULL, birthym  DATE    NOT NULL, pid      INTEGER NOT NULL, apptdate DATE    NOT NULL, apptime  TIME    NOT NULL, PRIMARY KEY (aid), FOREIGN KEY (cid, birthym) REFERENCES pregnancies, FOREIGN KEY (pid) REFERENCES midwives )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE notes ( nid      INTEGER NOT NULL, aid      INTEGER NOT NULL, notedate DATE    NOT NULL, notetime TIME    NOT NULL, PRIMARY KEY (nid), FOREIGN KEY (aid) REFERENCES appointments )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE technicians ( techid INTEGER     NOT NULL, tname  VARCHAR(30) NOT NULL, ttel   VARCHAR(20) NOT NULL, PRIMARY KEY (techid) )
+DB20000I  The SQL command completed successfully.
+
+db2 => db2 => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => db2 (cont.) => CREATE TABLE tests ( tid       INTEGER NOT NULL, mramq      VARCHAR(12), bid       INTEGER, aid       INTEGER NOT NULL, techid    INTEGER, type VARCHAR(20) NOT NULL, pscrpdate DATE    NOT NULL, testdate  DATE, examdate  DATE, result    VARCHAR(100), PRIMARY KEY (tid), FOREIGN KEY (mramq) REFERENCES mothers, FOREIGN KEY (bid) REFERENCES babies, FOREIGN KEY (aid) REFERENCES appointments, FOREIGN KEY (techid) REFERENCES technicians, CHECK (mramq IS NOT NULL OR bid IS NOT NULL) )
+DB20000I  The SQL command completed successfully.
+
+db2 => 
