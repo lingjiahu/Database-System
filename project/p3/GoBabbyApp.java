@@ -1,5 +1,6 @@
 package project.p3;
 
+import java.awt.print.PrinterGraphics;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -51,14 +52,14 @@ public class GoBabbyApp {
                 continue;
             }
 
-            // list all the appointments for that date for that midwife, ordered by time
-            ArrayList<Appointment> appointments = getAppointments(con, pid, inputDate);
-            if (appointments == null) { // If there are no appointments for that date, go back to asking for the date.
-                continue;
-            }
-
             // step 3: choose appointment
             while (true) {
+                // list all the appointments for that date for that midwife, ordered by time
+                ArrayList<Appointment> appointments = getAppointments(con, pid, inputDate);
+                if (appointments == null) { // If there are no appointments for that date, go back to asking for the date.
+                    continue;
+                }
+
                 displayAppointments(appointments);
                 System.out.println("Enter the appointment number that you would like to work on.\n " +
                         "                [E] to exit [D] to go back to another date :");
@@ -69,17 +70,16 @@ public class GoBabbyApp {
                 } else if (inputAppt.equals("D")) {  // return to choose date
                     break;  // break out from while loop for choose appointments, get back to choose date
                 }
-                int idx = s.nextInt();
-
+                int idx = Integer.parseInt(inputAppt);
                 // step 4: ask for action
-                Appointment appt = appointments.get(idx);
+                Appointment appt = appointments.get(idx-1);
                 String mname = appt.getMname();
                 String mramq = appt.getMramq();
                 int choice = displayOptions(mname, mramq);
                 while (choice > 0) {
                     switch (choice) {
                         case 1:
-                            reviewNotes(con, appt);
+                            reviewNotes(con, appt.getPrg());
                             choice = displayOptions(mname, mramq);
                             break;
                         case 2:
@@ -87,10 +87,11 @@ public class GoBabbyApp {
                             choice =  displayOptions(mname, mramq);
                             break;
                         case 3:
-                            addNote();
+                            addNote(con);
                             choice = displayOptions(mname, mramq);
                             break;
                         case 4:
+                            prescribeTest(con);
                             choice = displayOptions(mname, mramq);
                             break;
                         case 5:
@@ -129,7 +130,7 @@ public class GoBabbyApp {
                 " UNION" +
                 " SELECT cid, birthym, 'B' AS role" +
                 " FROM Pregnancies p2 WHERE p2.bpid = " + pid + ")" +
-                "SELECT apptime, r.role, mi.mname, mi.mramq" +
+                "SELECT a.aid, a.apptime, r.role, mi.mname, mi.mramq, r.cid, r.birthym" +
                 " FROM appointments a JOIN motherinfo mi ON a.cid = mi.cid" +
                 " JOIN mwrole r ON a.cid = r.cid AND a.birthym = r.birthym" +
                 " WHERE pid = " + pid + " AND apptdate = " + "\'" + date + "\'";
@@ -138,12 +139,19 @@ public class GoBabbyApp {
         ArrayList<Appointment> appts = new ArrayList<>();
         while (rs.next()) {
             Appointment app = new Appointment();
+            app.setAid(rs.getString("aid"));
             app.setApptime(rs.getString("apptime"));
             app.setMwrole(rs.getString("role"));
             app.setMname(rs.getString("mname"));
             app.setMramq(rs.getString("mramq"));
+            Pregnancy prg = new Pregnancy();
+            prg.setCid(rs.getString("cid"));
+            prg.setBirthym(rs.getString("birthym"));
+            app.setPrg(prg);
             appts.add(app);
         }
+        rs.close();
+        statement.close();
         return appts;
     }
 
@@ -161,7 +169,7 @@ public class GoBabbyApp {
     // display all options for the current Mother, return the option number
     static int displayOptions(String name, String ramq) {
         System.out.println(
-                "For" + name + ramq + "\n\n" +
+                "For" + name + " " +  ramq + "\n\n" +
                         "1. Review notes\n" +
                         "2. Review tests\n" +
                         "3. Add a note\n" +
@@ -172,45 +180,65 @@ public class GoBabbyApp {
         return s.nextInt();
     }
 
-
     // list all the notes relevant for this pregnancy
-    static void reviewNotes(Connection con, Appointment prg) throws SQLException {
+    static void reviewNotes(Connection con, Pregnancy prg) throws SQLException {
+        String querySQL = "WITH appts(aid) AS" +
+                " (SELECT a.aid" +
+                " FROM appointments a JOIN pregnancies p ON a.cid = p.cid AND a.birthym = p.birthym AND p.cid = " + prg.getCid() + " AND p.birthym = " + "\'" + prg.getBirthym() + "\')" +
+                "SELECT n.notedate, n.notetime, SUBSTR(n.notemsg, 1, 50) notemsg" +
+                " FROM notes n JOIN appts ON n.aid = appts.aid" +
+                " ORDER BY n.notedate DESC";
+        Statement statement = con.createStatement();
+        java.sql.ResultSet rs = statement.executeQuery(querySQL);
+        while (rs.next()) {
+            System.out.print(rs.getString("notedate") + " ");
+            System.out.print(rs.getString("notetime") + " ");
+            System.out.println(rs.getString("notemsg") + " ");
+        }
+        rs.close();
+        statement.close();
+    }
+
+    // list all the tests relevant for this pregnancy (but only the tests relevant for the mother)
+    static void reviewTests(Connection con, Appointment appt) throws SQLException {
         String querySQL = "";
         Statement statement = con.createStatement();
         java.sql.ResultSet rs = statement.executeQuery(querySQL);
         while (rs.next()) {
             System.out.print(rs.getString(""));
         }
-    }
-
-    // list all the tests relevant for this pregnancy (but only the tests relevant for the mother)
-    // in the descending order of date (test prescription), the output should be date (test prescription),
-    // test type and no more than the first 50 characters of each result(s).
-    // (put square brackets in output display to separate from the type of test and the text for results)
-    // If a result is not yet available, display the text PENDING in it’s place.
-    // e.g. 2022-02-01 [blood iron] A bit low, recommended supplements.
-    static void reviewTests(Connection con, Appointment prg) {
-        // TODO
+        rs.close();
+        statement.close();
     }
 
     // let the user type in a text (note) that is then stored into the system
     // use the current date and time
-    static void addNote() {
+    // TODO
+    static void addNote(Connection con) throws SQLException {
         System.out.println("Please type your observation:");
         Scanner s = new Scanner(System.in);
         String msg = s.nextLine();
-        // TODO
+        String insertSQL = "";
+        Statement statement = con.createStatement();
+        statement.executeUpdate ( insertSQL ) ;
+
+
+        statement.close();
     }
 
     // let the user enter the type of test that is being prescribed and that will be recorded in the system.
     // assume that test is for the mother
     // prescription date and sample date of the test is the date on which the test prescription is being entered
     // use the current date and time
-    static void prescribeTest() {
+    // TODO
+    static void prescribeTest(Connection con) throws SQLException {
         System.out.println("Please enter the type of test:");
         Scanner s = new Scanner(System.in);
         String msg = s.nextLine();
-        // TODO
+        String insertSQL = "";
+        Statement statement = con.createStatement();
+        statement.executeUpdate ( insertSQL ) ;
 
+        statement.close();
     }
 }

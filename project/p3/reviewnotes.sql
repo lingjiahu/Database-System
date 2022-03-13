@@ -9,8 +9,13 @@
 WITH appts(aid) AS
          (
              SELECT a.aid
-             FROM appointments a JOIN pregnancies p ON a.cid = p.cid AND a.birthym = p.birthym
+             FROM appointments a JOIN pregnancies p ON a.cid = p.cid AND a.birthym = p.birthym AND p.cid = 2003 AND p.birthym = '2022-05-02'
          )
-SELECT n.notedate, n.notetime, n.notemsg
+SELECT n.notedate, n.notetime, SUBSTR(n.notemsg, 1, 50) notemsg
 FROM notes n JOIN appts ON n.aid = appts.aid
+ORDER BY n.notedate DESC
 ;
+
+
+
+WITH appts(aid) AS (SELECT a.aid FROM appointments a JOIN pregnancies p ON a.cid = p.cid AND a.birthym = p.birthym AND p.cid = 2003 AND p.birthym = '2022-05-02')SELECT n.notedate, n.notetime, n.notemsg FROM notes n JOIN appts ON n.aid = 7002;
