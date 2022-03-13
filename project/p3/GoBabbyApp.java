@@ -33,7 +33,7 @@ public class GoBabbyApp {
         while (pid == null) {
             System.out.println("Please enter your practitioner id [E] to exit:");
             String inputPID = s.nextLine();
-            if (inputPID == "E") {           // close db connection and exit
+            if (inputPID.equals("E")) {           // close db connection and exit
                 con.close();
                 return;
             }
@@ -44,15 +44,15 @@ public class GoBabbyApp {
         while (true) {
             System.out.println("Please enter the date (YYYY-MM-DD) for appointment list [E] to exit:");
             String inputDate = s.nextLine();
-            if (inputDate == "E") {           // close db connection and exit
+            if (inputDate.equals("E")) {           // close db connection and exit
                 con.close();
                 return;
-            } else if (inputDate == "D") {  // return to choose date
+            } else if (inputDate.equals("D")) {  // return to choose date
                 continue;
             }
 
             // list all the appointments for that date for that midwife, ordered by time
-            ArrayList<Appointment> appointments = getAppointments(inputDate);
+            ArrayList<Appointment> appointments = getAppointments(con, pid, inputDate);
             if (appointments == null) { // If there are no appointments for that date, go back to asking for the date.
                 continue;
             }
@@ -60,12 +60,13 @@ public class GoBabbyApp {
             // step 3: choose appointment
             while (true) {
                 displayAppointments(appointments);
-                System.out.println("\n Enter the appointment number that you would like to work on. [E] to exit [D] to go back to another date :");
+                System.out.println("Enter the appointment number that you would like to work on.\n " +
+                        "                [E] to exit [D] to go back to another date :");
                 String inputAppt = s.nextLine();
-                if (inputAppt == "E") {           // close db connection and exit
+                if (inputAppt.equals("E")) {           // close db connection and exit
                     con.close();
                     return;
-                } else if (inputAppt == "D") {  // return to choose date
+                } else if (inputAppt.equals("D")) {  // return to choose date
                     break;  // break out from while loop for choose appointments, get back to choose date
                 }
                 int idx = s.nextInt();
@@ -78,11 +79,11 @@ public class GoBabbyApp {
                 while (choice > 0) {
                     switch (choice) {
                         case 1:
-                            reviewNotes(appt);
+                            reviewNotes(con, appt);
                             choice = displayOptions(mname, mramq);
                             break;
                         case 2:
-                            reviewTests(appt);
+                            reviewTests(con, appt);
                             choice =  displayOptions(mname, mramq);
                             break;
                         case 3:
@@ -103,30 +104,60 @@ public class GoBabbyApp {
         }
     }
 
-
+    // return pid if the input pid is valid, otherwise return null
     static String isValidPID(Connection con, String pid) throws SQLException {
-        String querySQL = "SELECT id FROM midwives WHERE pid = " + pid;
+        String querySQL = "SELECT pid FROM midwives WHERE pid = " + pid;
         Statement statement = con.createStatement();
         java.sql.ResultSet rs = statement.executeQuery(querySQL);
-        String validPID = rs.getString("PID");
+        String validPID = null;
+        if (rs.next()) {
+            validPID = rs.getString("PID");
+
+        }
         rs.close();
-        // TODO can validPID be null?
         statement.close();
         return validPID;
     }
 
-    static ArrayList<Appointment> getAppointments(String date) {
-        ArrayList<Appointment> appts = null;
+    // return a list of appointments for the midwife on the day
+    static ArrayList<Appointment> getAppointments(Connection con, String pid, String date) throws SQLException {
+        String querySQL = "WITH motherinfo(mname, mramq, cid) AS (" +
+                "SELECT m.mname, m.mramq, c.cid " +
+                "FROM mothers m join COUPLES c ON m.mramq = c.mramq), mwrole(cid, birthym, role) " +
+                "AS (SELECT cid, birthym, 'P' AS role" +
+                " FROM Pregnancies p1 WHERE p1.ppid = " + pid +
+                " UNION" +
+                " SELECT cid, birthym, 'B' AS role" +
+                " FROM Pregnancies p2 WHERE p2.bpid = " + pid + ")" +
+                "SELECT apptime, r.role, mi.mname, mi.mramq" +
+                " FROM appointments a JOIN motherinfo mi ON a.cid = mi.cid" +
+                " JOIN mwrole r ON a.cid = r.cid AND a.birthym = r.birthym" +
+                " WHERE pid = " + pid + " AND apptdate = " + "\'" + date + "\'";
+        Statement statement = con.createStatement();
+        java.sql.ResultSet rs = statement.executeQuery(querySQL);
+        ArrayList<Appointment> appts = new ArrayList<>();
+        while (rs.next()) {
+            Appointment app = new Appointment();
+            app.setApptime(rs.getString("apptime"));
+            app.setMwrole(rs.getString("role"));
+            app.setMname(rs.getString("mname"));
+            app.setMramq(rs.getString("mramq"));
+            appts.add(app);
+        }
         return appts;
     }
 
     static void displayAppointments(ArrayList<Appointment> appts) {
-        for (Appointment app : appts) {
-            // TODO
+        for (int i = 0; i < appts.size(); i++) {
+            System.out.print(i+1 + ":" + "  ");
+            System.out.print(appts.get(i).getApptime() + " ");
+            System.out.print(appts.get(i).getMwrole() + " ");
+            System.out.print(appts.get(i).getMname() + " ");
+            System.out.println(appts.get(i).getMramq());
         }
+        System.out.println();
     }
 
-    // TODO Mother?
     // display all options for the current Mother, return the option number
     static int displayOptions(String name, String ramq) {
         System.out.println(
@@ -142,12 +173,14 @@ public class GoBabbyApp {
     }
 
 
-    // list all the notes relevant for this pregnancy in the descending order of date time,
-    // even if they are not from the selected appointment
-    // the output should be date-time and no more than the first 50 characters of each note(s).
-    // e.g. 2022-02-13 10:02:45  Baby has good movements
-    static void reviewNotes(Appointment prg) {
-        // TODO
+    // list all the notes relevant for this pregnancy
+    static void reviewNotes(Connection con, Appointment prg) throws SQLException {
+        String querySQL = "";
+        Statement statement = con.createStatement();
+        java.sql.ResultSet rs = statement.executeQuery(querySQL);
+        while (rs.next()) {
+            System.out.print(rs.getString(""));
+        }
     }
 
     // list all the tests relevant for this pregnancy (but only the tests relevant for the mother)
@@ -156,7 +189,7 @@ public class GoBabbyApp {
     // (put square brackets in output display to separate from the type of test and the text for results)
     // If a result is not yet available, display the text PENDING in it’s place.
     // e.g. 2022-02-01 [blood iron] A bit low, recommended supplements.
-    static void reviewTests(Appointment prg) {
+    static void reviewTests(Connection con, Appointment prg) {
         // TODO
     }
 

@@ -1,0 +1,1 @@
+-- a mother M1 has had at least two pregnancies
