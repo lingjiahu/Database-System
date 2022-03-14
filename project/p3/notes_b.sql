@@ -6,6 +6,6 @@ WITH coupleinf(cid,mramq, fid, birthym, aid) AS (
     SELECT c.cid, c.mramq, c.fid, a.birthym, a.aid
     FROM couples c JOIN appointments a ON c.cid = a.cid  AND c.mramq = 'YANC01060003'
 )
-SELECT n.nid, n.notedate, n.notetime, n.notemsg, ci.cid, ci.birthym, ci.mramq, ci.fid
+SELECT n.nid, n.notedate, n.notetime, SUBSTR(n.notemsg, 1, 50) AS notemsg, ci.cid, ci.birthym, ci.mramq, ci.fid
 FROM notes n JOIN coupleinf ci ON n.aid = ci.aid
 ;

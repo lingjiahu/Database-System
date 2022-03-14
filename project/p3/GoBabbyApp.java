@@ -40,6 +40,9 @@ public class GoBabbyApp {
                 return;
             }
             pid = isValidPID(con, inputPID);
+            if (pid == null) {
+                System.out.println("Invalid practitioner id, please try again.");
+            }
         }
 
         // step 2: ask for appointment date

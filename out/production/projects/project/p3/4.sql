@@ -3,3 +3,6 @@
 
 CREATE INDEX address
 ON mothers(mtel, maddress);
+
+CREATE UNIQUE INDEX address
+    ON mothers(mramq) INCLUDE(maddress);
