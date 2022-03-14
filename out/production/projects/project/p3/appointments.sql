@@ -10,10 +10,9 @@ WITH motherinfo(mname, mramq, cid) AS (
          SELECT cid, birthym, 'B' AS role
          FROM Pregnancies p2 WHERE p2.bpid = 4001
      )
-
 SELECT
     apptime, r.role, mi.mname, mi.mramq, r.cid, r.birthym
 FROM appointments a JOIN motherinfo mi ON a.cid = mi.cid
 JOIN mwrole r ON a.cid = r.cid AND a.birthym = r.birthym
-WHERE pid = 4001 AND apptdate = '2022-03-24'
+WHERE pid = 4001 AND apptdate = '2022-03-01'
 ;

@@ -188,7 +188,7 @@ public class GoBabbyApp {
                 " FROM appointments a JOIN pregnancies p ON a.cid = p.cid AND a.birthym = p.birthym AND p.cid = " + prg.getCid() + " AND p.birthym = " + "\'" + prg.getBirthym() + "\')" +
                 "SELECT n.notedate, n.notetime, SUBSTR(n.notemsg, 1, 50) notemsg" +
                 " FROM notes n JOIN appts ON n.aid = appts.aid" +
-                " ORDER BY n.notedate DESC";
+                " ORDER BY n.notedate DESC, n.notetime DESC";
         Statement statement = con.createStatement();
         java.sql.ResultSet rs = statement.executeQuery(querySQL);
         while (rs.next()) {
@@ -213,7 +213,7 @@ public class GoBabbyApp {
         java.sql.ResultSet rs = statement.executeQuery(querySQL);
         while (rs.next()) {
             System.out.print(rs.getString("pscrpdate") + " ");
-            System.out.print(rs.getString("type") + " ");
+            System.out.print("[" + rs.getString("type") + "] ");
             System.out.println(rs.getString("result"));
         }
         rs.close();

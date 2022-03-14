@@ -13,5 +13,5 @@ WITH appts(aid) AS
          )
 SELECT n.notedate, n.notetime, SUBSTR(n.notemsg, 1, 50) notemsg
 FROM notes n JOIN appts ON n.aid = appts.aid
-ORDER BY n.notedate DESC
+ORDER BY n.notedate DESC, n.notetime DESC
 ;
