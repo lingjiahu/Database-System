@@ -2,7 +2,11 @@ package project.p3;
 
 import java.awt.print.PrinterGraphics;
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Scanner;
 
 public class GoBabbyApp {
@@ -83,15 +87,15 @@ public class GoBabbyApp {
                             choice = displayOptions(mname, mramq);
                             break;
                         case 2:
-                            reviewTests(con, appt);
+                            reviewTests(con, appt.getPrg());
                             choice =  displayOptions(mname, mramq);
                             break;
                         case 3:
-                            addNote(con);
+                            addNote(con, appt);
                             choice = displayOptions(mname, mramq);
                             break;
                         case 4:
-                            prescribeTest(con);
+                            prescribeTest(con, appt);
                             choice = displayOptions(mname, mramq);
                             break;
                         case 5:
@@ -200,12 +204,19 @@ public class GoBabbyApp {
     }
 
     // list all the tests relevant for this pregnancy (but only the tests relevant for the mother)
-    static void reviewTests(Connection con, Appointment appt) throws SQLException {
-        String querySQL = "";
+    static void reviewTests(Connection con, Pregnancy prg) throws SQLException {
+        String querySQL = "WITH appts(aid) AS" +
+                "(SELECT a.aid\n" +
+                " FROM appointments a JOIN pregnancies p ON a.cid = p.cid AND a.birthym = p.birthym AND p.cid = " + prg.getCid() + " AND p.birthym = \'" + prg.getBirthym() +"\')" +
+                " SELECT t.pscrpdate, t.type, SUBSTR(t.result, 1, 50) result" +
+                " FROM tests t JOIN appts ON t.aid = appts.aid AND t.mramq IS NOT NULL" +
+                " ORDER BY t.pscrpdate";
         Statement statement = con.createStatement();
         java.sql.ResultSet rs = statement.executeQuery(querySQL);
         while (rs.next()) {
-            System.out.print(rs.getString(""));
+            System.out.print(rs.getString("pscrpdate") + " ");
+            System.out.print(rs.getString("type") + " ");
+            System.out.println(rs.getString("result"));
         }
         rs.close();
         statement.close();
@@ -213,16 +224,34 @@ public class GoBabbyApp {
 
     // let the user type in a text (note) that is then stored into the system
     // use the current date and time
-    // TODO
-    static void addNote(Connection con) throws SQLException {
+    static void addNote(Connection con, Appointment appt) throws SQLException {
         System.out.println("Please type your observation:");
         Scanner s = new Scanner(System.in);
         String msg = s.nextLine();
-        String insertSQL = "";
+
+        // get largest nid in notes
+        String querySQL = "SELECT MAX(n.nid) nid FROM NOTES n";
         Statement statement = con.createStatement();
+        java.sql.ResultSet rs = statement.executeQuery(querySQL);
+        int nid;
+        if (rs.next()) {
+            nid = rs.getInt("nid") + 1; // nid for new note: largest nid in notes + 1
+        } else {    // no record in table
+            nid = 9001;
+        }
+        rs.close();
+
+        // generate current date and time
+        java.util.Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String curdate = formatter.format(date);
+        formatter = new SimpleDateFormat("HH:mm:ss");
+        String curtime = formatter.format(date);
+
+        // insert new note
+        String insertSQL = "INSERT INTO NOTES VALUES ("
+                + nid + ", " + appt.getAid() + ", " +  "\'" + curdate +  "\', " + "\'" +  curtime + "\', \'" + msg + "\')";
         statement.executeUpdate ( insertSQL ) ;
-
-
         statement.close();
     }
 
@@ -231,12 +260,37 @@ public class GoBabbyApp {
     // prescription date and sample date of the test is the date on which the test prescription is being entered
     // use the current date and time
     // TODO
-    static void prescribeTest(Connection con) throws SQLException {
+    static void prescribeTest(Connection con, Appointment appt) throws SQLException {
         System.out.println("Please enter the type of test:");
         Scanner s = new Scanner(System.in);
         String msg = s.nextLine();
-        String insertSQL = "";
+
+        // get largest nid in notes
+        String querySQL = "SELECT MAX(t.tid) tid FROM TESTS t";
         Statement statement = con.createStatement();
+        java.sql.ResultSet rs = statement.executeQuery(querySQL);
+        int tid;
+        if (rs.next()) {
+            tid = rs.getInt("tid") + 1; // nid for new note: largest nid in notes + 1
+        } else {    // no record in table
+            tid = 8001;
+        }
+        rs.close();
+
+        // generate current date and time
+        java.util.Date date = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        String curdate = formatter.format(date);
+        formatter = new SimpleDateFormat("HH:mm:ss");
+        String curtime = formatter.format(date);
+
+
+
+
+
+
+        String insertSQL = "";
+        statement = con.createStatement();
         statement.executeUpdate ( insertSQL ) ;
 
         statement.close();

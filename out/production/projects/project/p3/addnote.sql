@@ -1,0 +1,1 @@
+INSERT INTO NOTES VALUES (9006, 7002, '2022-03-13', '16:16:00', 'new note');

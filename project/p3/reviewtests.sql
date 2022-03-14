@@ -4,8 +4,14 @@
 -- （put square brackets in output display to separate from the type of test and the text for results)
 -- If a result is not yet available, display the text PENDING in it’s place.
 
-
-SELECT t.pscrpdate, t.type, t.result
-FROM tests t
+WITH appts(aid) AS
+         (
+             SELECT a.aid
+             FROM appointments a JOIN pregnancies p ON a.cid = p.cid AND a.birthym = p.birthym AND p.cid = 2003 AND p.birthym = '2022-05-02'
+         )
+SELECT t.pscrpdate, t.type, SUBSTR(t.result, 1, 50) result
+FROM tests t JOIN appts ON t.aid = appts.aid AND t.mramq IS NOT NULL
 ORDER BY t.pscrpdate
 ;
+
+INSERT INTO NOTES VALUES (9007, 7002, '2022-03-13', '20:00:28', ' good')
