@@ -1,10 +1,7 @@
 package project.p3;
 
-import java.awt.print.PrinterGraphics;
 import java.sql.*;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Scanner;
@@ -259,7 +256,6 @@ public class GoBabbyApp {
     // assume that test is for the mother
     // prescription date and sample date of the test is the date on which the test prescription is being entered
     // use the current date and time
-    // TODO
     static void prescribeTest(Connection con, Appointment appt) throws SQLException {
         System.out.println("Please enter the type of test:");
         Scanner s = new Scanner(System.in);
@@ -281,18 +277,12 @@ public class GoBabbyApp {
         java.util.Date date = new Date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         String curdate = formatter.format(date);
-        formatter = new SimpleDateFormat("HH:mm:ss");
-        String curtime = formatter.format(date);
 
-
-
-
-
-
-        String insertSQL = "";
+        // insert new test
+        String insertSQL = "INSERT INTO TESTS (TID, MRAMQ, AID, TYPE, PSCRPDATE, TESTDATE) " +
+                "VALUES (" + tid + ", \'" + appt.getMramq() + "\', " + appt.getAid() + ", " + "\'" + msg +  "\', " + "\'" + curdate +  "\', \'" + curdate +  "\')";
         statement = con.createStatement();
         statement.executeUpdate ( insertSQL ) ;
-
         statement.close();
     }
 }

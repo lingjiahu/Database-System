@@ -14,4 +14,4 @@ FROM tests t JOIN appts ON t.aid = appts.aid AND t.mramq IS NOT NULL
 ORDER BY t.pscrpdate
 ;
 
-INSERT INTO NOTES VALUES (9007, 7002, '2022-03-13', '19:59:47', 'good')
+INSERT INTO NOTES VALUES (9007, 7002, '2022-03-13', '20:00:28', ' good')
