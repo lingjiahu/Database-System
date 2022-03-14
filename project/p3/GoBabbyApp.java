@@ -205,7 +205,8 @@ public class GoBabbyApp {
         String querySQL = "WITH appts(aid) AS" +
                 "(SELECT a.aid\n" +
                 " FROM appointments a JOIN pregnancies p ON a.cid = p.cid AND a.birthym = p.birthym AND p.cid = " + prg.getCid() + " AND p.birthym = \'" + prg.getBirthym() +"\')" +
-                " SELECT t.pscrpdate, t.type, SUBSTR(t.result, 1, 50) result" +
+                " SELECT t.pscrpdate, t.type, CASE when t.result IS NOT NULL then SUBSTR(t.result, 1, 50)" +
+                " when t.result IS NULL then 'PENDING' END result" +
                 " FROM tests t JOIN appts ON t.aid = appts.aid AND t.mramq IS NOT NULL" +
                 " ORDER BY t.pscrpdate";
         Statement statement = con.createStatement();
